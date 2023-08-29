@@ -1,4 +1,4 @@
-package com.mfcc.digi.data.controllers;
+    package com.mfcc.digi.data.controllers;
 
 import com.mfcc.digi.data.client.DigimonClientApi;
 import com.mfcc.digi.data.model.Digimon;
@@ -25,8 +25,9 @@ public class GenerateData {
     public Optional<Result> getInformation() {
         if (digimon != null) {
             Result.ResultBuilder resultBuilder = Result.builder();
-            resultBuilder.id(digimon.getId());
+
             resultBuilder.name(digimon.getName());
+            resultBuilder.height(digimon.getHeight());
             String description = digimon.getDescriptions().stream()
                     .filter(descriptions -> "en_us".equals(descriptions.getLanguage()))
                     .findFirst().orElse(Digimon.Descriptions.builder().description("Description not found").build())
@@ -46,12 +47,6 @@ public class GenerateData {
                     .map(Digimon.NextEvolutions::getDigimon).collect(Collectors.toList());
             resultBuilder.nextEvolutions(nextEvolutions);
 
-            List<Result.Field> fields = new ArrayList<>();
-            digimon.getFields().forEach(field -> {
-                DigimonField digimonField = digimonClientApi.getDigimonField(field.getField());
-                fields.add(Result.Field.builder().name(digimonField.getName())
-                        .description(digimonField.getDescription())
-                        .build());
             });
             resultBuilder.fields(fields);
             log.info(resultBuilder.toString());
